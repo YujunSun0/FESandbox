@@ -1,0 +1,5 @@
+{
+  "title": "useState toggle & counter",
+  "tech": "react",
+  "description": "두 개의 상태를 함께 관리하며 UI를 업데이트하는 기본 패턴"
+}
