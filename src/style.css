@@ -4,21 +4,28 @@
 
 :root {
   color-scheme: light;
-  font-family: 'Inter', 'Pretendard', system-ui, -apple-system, sans-serif;
-  background-color: #f7f8fb;
+  font-family: 'Pretendard', 'Spoqa Han Sans Neo', 'Inter', 'Noto Sans KR', 'Apple SD Gothic Neo', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background-color: #f5f7fb;
   color: #0f172a;
   --surface: #ffffff;
-  --surface-strong: #ffffff;
+  --surface-strong: linear-gradient(145deg, #ffffff, #f7f9ff);
   --border: rgba(15, 23, 42, 0.08);
-  --shadow: 0 16px 48px rgba(15, 23, 42, 0.1);
-  --accent: #00c37a;
-  --accent-2: #1fb6ff;
+  --shadow: 0 16px 48px rgba(15, 23, 42, 0.08);
+  --accent: #22c55e;
+  --accent-2: #0ea5e9;
+  --muted: #64748b;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background: #f7f8fb;
+  background: radial-gradient(circle at 20% 20%, #f2f6ff 0, #f5f7fb 35%, #eef4ff 100%);
+  line-height: 1.6;
+}
+
+p {
+  line-height: 1.7;
 }
 
 #root {
@@ -56,4 +63,23 @@ a {
   color: #334155;
   font-size: 16px;
   line-height: 1.7;
+}
+
+::selection {
+  background: rgba(34, 197, 94, 0.15);
+}
+
+.pill {
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pill-muted {
+  background: #f8fafc;
+  color: var(--muted);
+  border: 1px solid #e2e8f0;
 }

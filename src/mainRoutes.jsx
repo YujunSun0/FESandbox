@@ -1,13 +1,20 @@
+import Home from './pages/Home'
+import BrowserRendering from './pages/browser-rendering.mdx'
 import HiddenDisplayVisibility from './pages/hidden-display-visibility.mdx'
 import UseStateTogglePage from './pages/UseStateTogglePage'
-import Home from './pages/Home'
 
 const routes = [
   {
     path: '/',
     element: <Home />,
-    label: '홈',
+    label: 'Home',
     tech: 'Index',
+  },
+  {
+    path: '/browser-rendering',
+    element: <BrowserRendering />,
+    label: 'Browser Rendering',
+    tech: 'HTML',
   },
   {
     path: '/hidden-display-visibility',

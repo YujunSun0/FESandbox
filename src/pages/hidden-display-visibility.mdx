@@ -1,23 +1,23 @@
-import { useEffect, useRef, useState } from 'react'
-import Playground from '../components/playground/Playground.jsx'
+import { useState } from 'react'
 import { WorkshopColumns } from '../components/playground/WorkshopColumns.jsx'
 
 export const meta = {
   title: 'Hidden vs Display vs Visibility',
-  summary: '세 가지 숨김 방식의 렌더링/레이아웃 차이를 시각적으로 비교하는 HTML 예제',
+  summary: 'Three ways to hide elements and how each affects layout, rendering, and events.',
   tech: 'HTML',
   slug: '/hidden-display-visibility',
+  type: 'Lab',
   tags: ['layout', 'visibility', 'html'],
 }
-
 
 # Hidden vs Display vs Visibility
 
 <div className="card-strong px-6 py-5 mb-6">
   <p className="section-header mb-2">TL;DR</p>
   <p className="prose-lead">
-    `display: none`, `visibility: hidden`, `hidden` 속성은 모두 요소를 숨기지만 렌더 트리와 이벤트 처리 방식이 다릅니다.
-    아래 예제는 그 차이를 즉시 시각화합니다. 처음에는 프리뷰만 보이고, 필요할 때 코드 편집을 열 수 있습니다.
+    `display: none` removes the element from layout and events. `visibility: hidden` keeps the space but blocks rendering
+    and events. The HTML `hidden` attribute is a semantic toggle that also hides the element. Use the lab below to see the
+    differences live.
   </p>
   <div className="mt-3 flex gap-2 flex-wrap">
     <span className="px-3 py-1 text-xs rounded-full bg-white/10 text-indigo-100 border border-white/10">Layout</span>
@@ -26,140 +26,98 @@ export const meta = {
   </div>
 </div>
 
-export const ResizableLab = () => {
-  const containerRef = useRef(null)
-  const [isNarrow, setIsNarrow] = useState(false)
-  const [sizes, setSizes] = useState({ left: 28, middle: 36, right: 36 })
-  const dragRef = useRef(null)
-
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 900px)')
-    const handler = (e) => setIsNarrow(e.matches)
-    setIsNarrow(mq.matches)
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
-
-  const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
-
-  const startDrag = (handle) => (e) => {
-    dragRef.current = { handle }
-    const move = (event) => {
-      if (!containerRef.current) return
-      const rect = containerRef.current.getBoundingClientRect()
-      const x = event.clientX - rect.left
-      const pct = (x / rect.width) * 100
-      const minPane = 10
-      setSizes((prev) => {
-        if (dragRef.current?.handle === 'left') {
-          const right = prev.right
-          let left = clamp(pct, minPane, 100 - minPane - right)
-          let middle = 100 - right - left
-          if (middle < minPane) {
-            middle = minPane
-            left = 100 - right - middle
-          }
-          return { left, middle, right }
-        }
-        if (dragRef.current?.handle === 'right') {
-          const left = prev.left
-          let right = clamp(100 - pct, minPane, 100 - minPane - left)
-          let middle = 100 - left - right
-          if (middle < minPane) {
-            middle = minPane
-            right = 100 - left - middle
-          }
-          return { left, middle, right }
-        }
-        return prev
-      })
-    }
-    const up = () => {
-      dragRef.current = null
-      window.removeEventListener('mousemove', move)
-      window.removeEventListener('mouseup', up)
-    }
-    window.addEventListener('mousemove', move)
-    window.addEventListener('mouseup', up)
-  }
-
-  if (isNarrow) {
-    return (
-      <div className="space-y-4">
-        <ConceptCard />
-        <WorkshopColumns example="html/hidden-display-visibility" meta={meta} />
-      </div>
-    )
-  }
-
-  return (
-    <div ref={containerRef} className="w-full h-[80vh] flex overflow-hidden">
-      <div style={{ width: `${sizes.left}%` }} className="h-full overflow-auto">
-        <ConceptCard tight />
-      </div>
-      <div
-        className="w-2 cursor-col-resize bg-slate-200 hover:bg-emerald-200 transition"
-        onMouseDown={startDrag('left')}
-      />
-      <div style={{ width: `${sizes.middle}%` }} className="h-full overflow-auto">
-        <WorkshopColumns
-          example="html/hidden-display-visibility"
-          meta={meta}
-          layout={({ CodePane, PreviewPane }) => (
-            <>
-              <div className="h-full">
-                <CodePane />
-              </div>
-            </>
-          )}
-        />
-      </div>
-      <div
-        className="w-2 cursor-col-resize bg-slate-200 hover:bg-emerald-200 transition"
-        onMouseDown={startDrag('right')}
-      />
-      <div style={{ width: `${sizes.right}%` }} className="h-full overflow-auto">
-        <WorkshopColumns
-          example="html/hidden-display-visibility"
-          meta={meta}
-          layout={({ PreviewPane }) => (
-            <div className="h-full">
-              <PreviewPane />
-            </div>
-          )}
-        />
-      </div>
-    </div>
-  )
-}
-
 export const ConceptCard = ({ tight = false }) => (
   <div className={`card-surface ${tight ? 'px-3 py-4' : 'px-4 sm:px-6 py-5'} space-y-4 h-full`}>
     <div>
       <p className="section-header mb-2">Concept</p>
       <h2 className="text-2xl font-semibold text-slate-900 mb-2">Hidden vs Display vs Visibility</h2>
       <p className="prose-lead">
-        세 가지 숨김 방식은 렌더 트리와 이벤트 처리에 미치는 영향이 모두 다릅니다. 아래 설명을 읽고, 중앙의 코드와
-        우측 프리뷰를 함께 보며 차이를 체감해보세요.
+        The three hiding strategies differ in how they affect layout, rendering, and event handling. Read the notes, then
+        adjust the code and preview side by side to feel the differences.
       </p>
     </div>
     <div className="space-y-2">
-      <p className="section-header">차이 요약</p>
+      <p className="section-header">Key differences</p>
       <ul className="text-slate-700 leading-7 space-y-2">
-        <li>• <code>display: none</code> — 요소가 레이아웃에서 제거되어 공간을 차지하지 않음.</li>
-        <li>• <code>visibility: hidden</code> — 공간은 유지하나 렌더링·이벤트가 차단됨.</li>
-        <li>• <code>hidden</code> attribute — HTML 차원에서 렌더링 제외와 유사하게 동작.</li>
+        <li>
+          <code>display: none</code>: element is removed from layout; no space, no rendering, no events.
+        </li>
+        <li>
+          <code>visibility: hidden</code>: keeps layout space; hidden visually; events blocked.
+        </li>
+        <li>
+          <code>hidden</code> attribute: semantic toggle at HTML level; behaves similar to `display: none`.
+        </li>
       </ul>
     </div>
     <div className="space-y-2">
-      <p className="section-header">배운 점</p>
+      <p className="section-header">What you’ll learn</p>
       <ol className="text-slate-700 leading-7 space-y-2 list-decimal list-inside">
-        <li>레이아웃 테스트 시 `display` 속성이 가장 직접적인 영향.</li>
-        <li>접근성과 애니메이션을 고려하면 `visibility`와 `opacity` 조합이 유용.</li>
-        <li>토글 UI에서는 속성별 특성을 이해하고 선택해야 예기치 않은 레이아웃 점프를 방지할 수 있음.</li>
+        <li>Layout impact when removing vs keeping space.</li>
+        <li>When to combine visibility with opacity/animation for smoother UX.</li>
+        <li>Choosing the right strategy for accessibility and layout stability.</li>
       </ol>
     </div>
   </div>
 )
 
-<ResizableLab />
+export const LabLayout = () => {
+  const [showCode, setShowCode] = useState(false)
+  const isCode = showCode
+  const gridTemplate = isCode ? '1.2fr 1.1fr 0.8fr' : '1.5fr 0.8fr'
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-end gap-2">
+        <button
+          onClick={() => setShowCode(false)}
+          className={`px-3 py-1.5 text-sm rounded-lg border transition ${
+            !showCode ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-white border-slate-200 text-slate-700'
+          }`}
+        >
+          프리뷰 모드
+        </button>
+        <button
+          onClick={() => setShowCode(true)}
+          className={`px-3 py-1.5 text-sm rounded-lg border transition ${
+            showCode ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-white border-slate-200 text-slate-700'
+          }`}
+        >
+          코드 + 프리뷰
+        </button>
+      </div>
+
+      <div className="grid gap-4" style={{ gridTemplateColumns: gridTemplate }}>
+        <div className="h-full">
+          <ConceptCard tight />
+        </div>
+        {showCode && (
+          <div className="h-full">
+            <WorkshopColumns
+              example="html/hidden-display-visibility"
+              meta={meta}
+              layout={({ CodePane }) => (
+                <div className="h-full">
+                  <CodePane />
+                </div>
+              )}
+            />
+          </div>
+        )}
+        <div className="h-full">
+          <WorkshopColumns
+            example="html/hidden-display-visibility"
+            meta={meta}
+            layout={({ PreviewPane }) => (
+              <div className="h-full">
+                <PreviewPane />
+              </div>
+            )}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+<LabLayout />

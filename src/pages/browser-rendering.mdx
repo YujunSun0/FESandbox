@@ -1,0 +1,167 @@
+import { useEffect, useRef, useState } from 'react'
+import { WorkshopColumns } from '../components/playground/WorkshopColumns.jsx'
+
+export const meta = {
+  title: 'Browser Rendering Lab',
+  summary: 'Hands-on walkthrough of DOM parsing, CSSOM, JS blocking, and reflow vs repaint.',
+  tech: 'HTML',
+  slug: '/browser-rendering',
+  type: 'Mixed',
+  tags: ['browser', 'rendering', 'performance', 'layout'],
+}
+
+# Browser Rendering Lab
+
+Explore the full pipeline - DOM parsing, CSSOM, render tree, and painting - inside one playground. Edit the code on the left and watch the preview and console on the right.
+
+<div className="card-strong px-6 py-5 mb-6">
+  <p className="section-header mb-2">TL;DR</p>
+  <p className="prose-lead">
+    A synchronous `<script>` pauses HTML parsing. CSS parsing completes before the render tree is ready. Layout changes
+    trigger reflow; paint-only changes trigger repaint. Use the buttons/logs to see each effect.
+  </p>
+  <div className="mt-3 flex gap-2 flex-wrap">
+    <span className="px-3 py-1 text-xs rounded-full bg-white/10 text-indigo-100 border border-white/10">DOM</span>
+    <span className="px-3 py-1 text-xs rounded-full bg-white/10 text-indigo-100 border border-white/10">CSSOM</span>
+    <span className="px-3 py-1 text-xs rounded-full bg-white/10 text-indigo-100 border border-white/10">Reflow</span>
+    <span className="px-3 py-1 text-xs rounded-full bg-white/10 text-indigo-100 border border-white/10">Repaint</span>
+    <span className="px-3 py-1 text-xs rounded-full bg-white/10 text-indigo-100 border border-white/10">Layout</span>
+  </div>
+</div>
+
+export const ConceptCard = ({ tight = false }) => (
+  <div className={`card-surface ${tight ? 'px-3 py-4' : 'px-4 sm:px-6 py-5'} space-y-4 h-full`}>
+    <div>
+      <p className="section-header mb-2">Concept</p>
+      <h2 className="text-2xl font-semibold text-slate-900 mb-2">Rendering flow</h2>
+      <p className="prose-lead">
+        See how a synchronous script pauses parsing, how the render tree appears after CSS parsing, and how reflow differs
+        from repaint. Use the console logs and buttons to observe each step.
+      </p>
+    </div>
+    <div className="space-y-2">
+      <p className="section-header">What to watch</p>
+      <ul className="text-slate-700 leading-7 space-y-2">
+        <li>Script timing during DOM creation and which nodes already exist</li>
+        <li>Computed style after CSSOM + render tree completion</li>
+        <li>Parsing blocked by synchronous JavaScript</li>
+        <li>Reflow (layout) vs Repaint (paint) cost</li>
+        <li>Large layout shifts when toggling Flex/Grid</li>
+      </ul>
+    </div>
+    <div className="space-y-2">
+      <p className="section-header">How to use</p>
+      <ol className="text-slate-700 leading-7 space-y-2 list-decimal list-inside">
+        <li>Edit logs/styles/layout in the code pane.</li>
+        <li>Check preview and console to understand flow and cost.</li>
+      </ol>
+    </div>
+  </div>
+)
+
+export const ResizableLab = () => {
+  const containerRef = useRef(null)
+  const [isNarrow, setIsNarrow] = useState(false)
+  const [sizes, setSizes] = useState({ left: 32, middle: 36, right: 32 })
+  const dragRef = useRef(null)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 900px)')
+    const handler = (e) => setIsNarrow(e.matches)
+    setIsNarrow(mq.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
+
+  const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
+
+  const startDrag = (handle) => (e) => {
+    dragRef.current = { handle }
+    const move = (event) => {
+      if (!containerRef.current) return
+      const rect = containerRef.current.getBoundingClientRect()
+      const x = event.clientX - rect.left
+      const pct = (x / rect.width) * 100
+      const minPane = 12
+      setSizes((prev) => {
+        if (dragRef.current?.handle === 'left') {
+          const right = prev.right
+          let left = clamp(pct, minPane, 100 - minPane - right)
+          let middle = 100 - right - left
+          if (middle < minPane) {
+            middle = minPane
+            left = 100 - right - middle
+          }
+          return { left, middle, right }
+        }
+        if (dragRef.current?.handle === 'right') {
+          const left = prev.left
+          let right = clamp(100 - pct, minPane, 100 - minPane - left)
+          let middle = 100 - left - right
+          if (middle < minPane) {
+            middle = minPane
+            right = 100 - left - middle
+          }
+          return { left, middle, right }
+        }
+        return prev
+      })
+    }
+    const up = () => {
+      dragRef.current = null
+      window.removeEventListener('mousemove', move)
+      window.removeEventListener('mouseup', up)
+    }
+    window.addEventListener('mousemove', move)
+    window.addEventListener('mouseup', up)
+  }
+
+  if (isNarrow) {
+    return (
+      <div className="space-y-4">
+        <ConceptCard />
+        <WorkshopColumns example="html/browser-rendering-lab" meta={meta} />
+      </div>
+    )
+  }
+
+  return (
+    <div ref={containerRef} className="w-full h-[82vh] flex overflow-hidden">
+      <div style={{ width: `${sizes.left}%` }} className="h-full overflow-auto">
+        <ConceptCard tight />
+      </div>
+      <div
+        className="w-2 cursor-col-resize bg-slate-200 hover:bg-emerald-200 transition"
+        onMouseDown={startDrag('left')}
+      />
+      <div style={{ width: `${sizes.middle}%` }} className="h-full overflow-auto">
+        <WorkshopColumns
+          example="html/browser-rendering-lab"
+          meta={meta}
+          layout={({ CodePane }) => (
+            <div className="h-full">
+              <CodePane />
+            </div>
+          )}
+        />
+      </div>
+      <div
+        className="w-2 cursor-col-resize bg-slate-200 hover:bg-emerald-200 transition"
+        onMouseDown={startDrag('right')}
+      />
+      <div style={{ width: `${sizes.right}%` }} className="h-full overflow-auto">
+        <WorkshopColumns
+          example="html/browser-rendering-lab"
+          meta={meta}
+          layout={({ PreviewPane }) => (
+            <div className="h-full">
+              <PreviewPane />
+            </div>
+          )}
+        />
+      </div>
+    </div>
+  )
+}
+
+<ResizableLab />

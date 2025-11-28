@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>브라우저 동작 실습</title>
+  </head>
+  <body>
+    <header>
+      <h1>브라우저 동작 실습</h1>
+      <p class="lede">HTML 파싱부터 레이아웃까지, 한 페이지에서 모두 시험해 보세요.</p>
+    </header>
+
+    <section class="card">
+      <h2>1) DOM 생성 중간 상태</h2>
+      <p class="hint">아래 스크립트는 파싱 도중 실행되어 현재까지 만들어진 DOM을 콘솔에 남깁니다.</p>
+
+      <h3 id="dom-title">DOM 생성 중입니다</h3>
+      <p id="dom-paragraph">이 문장은 DOM 파싱 중 만들어집니다.</p>
+      <script>
+        console.log('HTML 파싱 중, #dom-title:', document.getElementById('dom-title'));
+        console.log('HTML 파싱 중, #dom-paragraph:', document.getElementById('dom-paragraph'));
+      </script>
+      <p class="note">콘솔을 열어 순서를 확인하세요.</p>
+    </section>
+
+    <section class="card">
+      <h2>2) CSS 파싱 & 렌더 트리</h2>
+      <p class="hint">CSS 적용 전/후 스타일 변화를 콘솔로 확인합니다.</p>
+      <div id="css-box" class="demo-box"></div>
+      <button id="styleBtn">스타일 재계산 로그 보기</button>
+      <pre class="console" id="styleLog"></pre>
+    </section>
+
+    <section class="card">
+      <h2>3) JavaScript가 HTML 파싱을 막을 때</h2>
+      <p class="hint">아래 버튼을 누르면 1초 동안 HTML 파싱이 중단된다고 가정한 시나리오를 실행합니다.</p>
+      <button id="blockBtn">1초 블로킹 스크립트 실행</button>
+      <p id="blockingResult" class="note"></p>
+      <p class="muted">이 문장은 스크립트 끝나기 전에는 DOM에 나타나지 않는다고 가정한 위치입니다.</p>
+    </section>
+
+    <section class="card grid-2">
+      <div>
+        <h2>4) Reflow vs Repaint</h2>
+        <p class="hint">레이아웃 변경과 색상 변경 시간을 각각 계측합니다.</p>
+        <button id="reflowBtn">Reflow 발생시키기</button>
+        <div id="reflowBox" class="demo-box tomato" aria-label="Reflow Box"></div>
+        <pre class="console" id="reflowLog"></pre>
+      </div>
+      <div>
+        <h2>Repaint만 발생</h2>
+        <p class="hint">색상만 바꿔 Repaint만 발생시킵니다.</p>
+        <button id="repaintBtn">Repaint만 발생시키기</button>
+        <div id="repaintBox" class="demo-box sky" aria-label="Repaint Box"></div>
+        <pre class="console" id="repaintLog"></pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>5) 레이아웃 실험: Flex ↔ Grid</h2>
+      <p class="hint">display 전환이 큰 Reflow를 일으킵니다.</p>
+      <div id="container" class="layout-container">
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+      </div>
+      <div class="btn-row">
+        <button id="flexBtn">Flex로 변경</button>
+        <button id="gridBtn">Grid로 변경</button>
+      </div>
+      <pre class="console" id="layoutLog"></pre>
+    </section>
+  </body>
+</html>

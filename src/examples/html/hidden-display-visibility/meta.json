@@ -1,5 +1,5 @@
 {
-  "title": "hidden vs display vs visibility",
+  "title": "Hidden vs Display vs Visibility",
   "tech": "html",
-  "description": "각 속성이 레이아웃과 렌더링에 주는 차이를 시각적으로 비교하는 예제"
+  "description": "Compare layout and rendering differences between display:none, visibility:hidden, and the hidden attribute."
 }

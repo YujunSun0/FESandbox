@@ -1,308 +1,165 @@
-📘 PRD — Interactive Web Development Learning Hub
-
-버전: 1.0
-작성자: 선유준
-목표 출시일: 미정
-문서 목적: 본 프로젝트의 목적·기능·기술 요구사항을 명확히 정의하고, 디자인·개발·운영의 기준을 제공한다.
-
-1. 📌 프로젝트 개요
-1.1 목적
-
-웹 개발 학습 과정에서 얻은 지식들을 단순히 텍스트로 기록하는 것이 아니라,
-직접 실행해볼 수 있는 코드 예제 + 설명 + 시각화 형태로 정리해두는 플랫폼을 만든다.
-
-본인의 학습 아카이브 자동 생성
-
-다른 개발자들이 참고할 수 있는 살아있는 교본
-
-인터랙티브한 학습 경험 제공
-
-HTML/CSS/JS 뿐 아니라 React JSX 등 다양한 기술 스택의 예제 실행 가능
-
-1.2 핵심 컨셉
-
-“코드 실행 가능한 프론트엔드 학습 노트”
-→ 블로그처럼 읽고, CodeSandbox처럼 실행하고, 문서처럼 정리된 형태.
-
-2. 🎯 핵심 가치 제안 (Value Proposition)
-✔ 본인은
-
-학습 기록이 자연스럽게 쌓임
-
-글과 코드가 분리되지 않아 복습이 쉬움
-
-자신의 학습 성장 로그로 활용 가능
-
-기술 포트폴리오로 사용 가능
-
-✔ 다른 개발자들은
-
-개념 설명 + 즉시 실행 가능한 예제 제공
-
-코드 수정 후 바로 결과 확인 가능
-
-실험 기반 학습(Experiment-based Learning) 가능
-
-3. 🧱 주요 기능 요구사항 (Features)
-3.1 예제 관리 (Examples)
-✔ 지원 포맷
-
-HTML/CSS/JS
-
-React JSX
-
-추후 Vue, Svelte 등 기술 확장 가능
-
-✔ 예제 파일 구조
-
-예제는 다음 구조로 관리:
-
-examples/
-  html/
-    example-name/
-      index.html
-      style.css
-      script.js
-      meta.json
-  react/
-    example-name/
-      App.jsx
-      index.js
-      meta.json
-
-✔ meta.json 내용
-{
-  "title": "hidden vs display vs visibility",
-  "tech": "html",
-  "description": "렌더 트리 차이를 보여주는 예제"
-}
-
-3.2 Playground (코드 실행 환경)
-✔ HTML용 Sandbox
-
-iframe 기반
-
-HTML + CSS + JS 파일을 합쳐서 iframe.srcdoc으로 실행
-
-완전 격리되어 예제 간 충돌 없는 구조
-
-✔ React JSX용 Sandbox
-
-ESBuild WASM을 사용하여 브라우저에서 실시간 번들링
-
-JSX → JS 변환 지원
-
-React, ReactDOM 자동 주입
-
-번들 결과를 iframe으로 렌더링
-
-✔ 공통 기능
-
-코드 편집 기능 (Monaco Editor)
-
-Auto-save 또는 로컬 실행
-
-Reset 버튼
-
-다중 파일 구조 지원(탭)
-
-3.3 문서(학습 페이지) 작성 시스템
-✔ MDX 기반 학습 페이지
-
-Markdown 처럼 작성 가능
-
-JSX 삽입으로 Playground 호출 가능
-
-예제 파일을 불러와 실행 가능
-
-예제:
-
-# Hidden vs Display vs Visibility
-
-<Playground example="html/hidden-display-visibility" />
-
-이 속성들은 렌더 트리에서 다음과 같은 차이가 있다...
-
-✔ 페이지 구조
-
-제목
-
-설명
-
-Playground
-
-배운 점 요약
-
-참고 링크
-
-3.4 UI/UX 요구사항
-✔ 사이드바 네비게이션
-
-HTML
-
-CSS
-
-JS
-
-React
-
-Browser Theory
-이런 기준으로 분류
-
-✔ Playground 레이아웃
-
-좌측: 코드 편집기
-
-우측: 실행 결과 (iframe)
-
-파일 탭 UI 지원 (index.html, style.css 등)
-
-✔ 다크모드 지원
-
-코드 에디터 연동
-
-4. 🧩 기술 스택 요구사항
-4.1 Frontend
-
-React + Vite
-
-MDX (mdx-bundler 또는 @mdx-js/react)
-
-Monaco Editor
-
-ESBuild WASM (React 예제 번들링용)
-
-TailwindCSS (선택)
-
-4.2 Bundling & Runtime
-
-HTML 예제 → iframe sandbox
-
-React 예제 → esbuild-wasm을 이용해 브라우저 번들링
-
-4.3 Directory 구조
-project-root/
- ├─ src/
- │   ├─ components/
- │   │   └─ Playground/
- │   ├─ pages/
- │   ├─ styles/
- │   └─ main.tsx
- ├─ examples/
- │   ├─ html/
- │   ├─ react/
- └─ public/
-
-5. ⚙️ 비기능적 요구사항 (NFR)
-5.1 성능
-
-HTML 예제는 즉시 로드
-
-React 예제의 빌드는 1초 이하 목표
-
-예제 실행은 완전히 격리된 환경 유지(iframe sandbox)
-
-5.2 확장성
-
-tech 값만 추가하면 Vue/Svelte 등도 수용 가능
-
-예제 파일 구조 동일하게 유지
-
-5.3 유지보수성
-
-Playground 컴포넌트는 tech마다 adapter 사용
-
-htmlAdapter
-
-reactAdapter
-
-(추후) vueAdapter …
-
-6. 🧭 사용자 흐름 (User Flow)
-
-개발자가 개념을 학습함
-
-예제 HTML/React 코드를 examples/ 폴더에 생성
-
-meta.json으로 예제 정보를 등록
-
-MDX 문서에서 <Playground example="html/hidden-display-visibility" /> 호출
-
-사용자는 MDX 페이지에서 설명을 읽고, 바로 코드 수정하며 학습
-
-예제가 GitHub를 통해 공개되면 다른 개발자도 동일하게 학습 가능
-
-7. 🚀 MVP 범위
-포함
-
-HTML iframe sandbox
-
-React esbuild wasm bundler
-
-Monaco Editor 탑재
-
-예제 파일 로딩
-
-MDX 문서 렌더링
-
-사이드바 네비게이션
-
-제외
-
-사용자 계정 시스템
-
-예제 온라인 업로드 기능
-
-버전 관리 자동화 시스템
-
-서버 API
-
-8. 📅 로드맵 (초기 버전 기준)
-1주차
-
-프로젝트 세팅(Vite, React, Tailwind, MDX 연결)
-
-Playground 기본 UI 구조 생성
-
-2주차
-
-HTML sandbox adapter 구현
-
-다중 파일 탭 UI 구현
-
-3주차
-
-React adapter(esbuild-wasm) 구현
-
-React 예제 렌더링 성공
-
-4주차
-
-사이드바/라우팅 구조 구현
-
-첫 학습 페이지 제작 및 전체 QA 진행
-
-9. 📌 성공 기준 (Success Metrics)
-
-개발자가 예제 10개 이상 안정적으로 기록 가능
-
-사용자가 예제를 열었을 때 3초 이내 실행 가능
-
-React 예제 번들링 평균 1초 이하
-
-GitHub에서 프로젝트 Star 50개 이상 (공개 시)
-
-✔️ 마지막 요약
-
-이 프로젝트는 단순 문서 형태가 아닌
-**“실행 가능한 학습 경험”**을 제공하는 새로운 형태의 프론트엔드 학습 레퍼런스 플랫폼이다.
-
-HTML & React 코드 모두 지원
-
-실행 가능한 샌드박스 제공
-
-문서 + 코드가 통합된 MDX 페이지
-
-본인의 학습 로그를 체계적으로 축적 가능
-
-다른 개발자에게도 도움이 되는 오픈소스 형태
+# 프런트엔드 랩 — 제품 방향 & PRD (2025-11-27)
+
+인터랙티브 웹 학습 허브: 블로그처럼 읽고, 같은 화면에서 실습하는 경험을 목표로 합니다. 현재 상태, 목표 UX, 그리고 Supabase 기반 서버 계획을 한눈에 볼 수 있도록 정리했습니다.
+
+## 0. 현재 상태
+- 프런트 스택: Vite + React 18, MDX, Tailwind CSS, Monaco Editor, esbuild-wasm.
+- 플레이그라운드: HTML iframe 샌드박스, React(esm build) 샌드박스, 코드/프리뷰 토글, reset/run.
+- 콘텐츠: `src/pages/*.mdx` 글, `src/examples/<tech>/<example>/` 실습(meta.json 포함).
+- 라우팅: `src/mainRoutes.jsx`; Home은 MDX meta 기반 카드 자동 노출.
+
+## 1. 목표 경험
+- 콘텐츠 타입: 게시글(텍스트 우선), 실습(Playground 중심), 혼합(텍스트+실습 병행).
+- 공통 메타: `title`, `summary`, `slug`, `tags`, `tech`, `type`, `author`, `publishedAt`, `hero?`, `estimatedTime?`.
+- UX: 본문 우선 + 우측 실습 패널. 데스크톱: 본문 + 오른쪽 패널(프리뷰 기본, 코드 토글). 모바일: 본문 → 프리뷰 → 코드 스택.
+- 탐색/발견: 목차, 태그, 검색, 타입 필터(Post/Lab/Mixed), 관련 글/실습 추천.
+- 어서링/관리: 대시보드(목록/필터, draft/published), 에디터(MDX WYSIWYG 또는 스플릿), 메타 입력, 실습 파일 편집+프리뷰, 자동저장. 역할: admin/editor.
+
+## 2. 아키텍처(계획)
+- 프런트: React + MDX 렌더러, 프리뷰 우선 탭형 Playground, API 기반 데이터 로딩을 고려한 추상화.
+- 백엔드(Supabase):
+  - Auth: Supabase Auth(이메일+비밀번호, 매직링크, 필요 시 OAuth), 역할 클레임.
+  - DB: Supabase Postgres + RLS.
+  - 스토리지: Supabase Storage(히어로/에셋 버킷, 퍼블릭/프라이빗 분리).
+  - Functions(Edge): 슬러그 중복 체크, 발행 플로우, 이미지 유틸 등.
+  - Realtime: 초안 협업 알림 정도로 선택적 활용.
+
+## 3. 데이터 모델(초안)
+- `posts`: id, slug, title, summary, body_mdx, type(Post/Lab/Mixed), tech, tags[], hero?, author_id, status(draft/published), published_at, updated_at.
+- `labs`: id, key(tech/path), files json[{filename, content}], meta json{title, tech, description}, linked_post_id?, created_at, updated_at.
+- `users`: id, email, role(admin/editor) — 인증은 Supabase Auth가 관리.
+- `assets`: id, url, meta, owner_id, created_at.
+
+## 4. UX 레이아웃 계획
+- 글 상세: 헤더(제목/요약/메타) → 본문 → 우측 실습 패널(프리뷰 기본, 코드 탭) → 관련 콘텐츠.
+- Playground: 프리뷰 우선, 코드 탭/토글, Reset/Run, Auto-run, 에러 표시, 섹션 앵커/점프.
+- 홈/목록: 타입 필터(Post/Lab/Mixed), 태그 칩, 검색. 현재 홈 톤앤매너 유지.
+
+## 5. 로드맵(순차)
+1) UX 리팩(프런트): 프리뷰 우선 Playground, 본문+우측 패널 레이아웃, type 메타/필터 적용.
+2) API 스켈레톤(Supabase): Auth + posts CRUD + labs CRUD, 프런트 fetch 훅을 Supabase로 교체.
+3) Admin UI: 대시보드/에디터/발행, 실습 파일 편집+프리뷰, draft/published 플로우.
+4) 스토리지/배포: Supabase DB+Storage, 프런트 배포(Vercel/Netlify/S3+CF), CDN 자산.
+5) 검색/추천: 태그/텍스트 검색, 연관 게시글/실습 추천.
+
+## 6. 디렉터리 컨벤션(현재)
+- Pages: `src/pages/<slug>.mdx` (상단에 `export const meta`).
+- Labs: `src/examples/<tech>/<example-key>/` + `meta.json`; HTML(index/style/script), React(index.jsx + App.jsx 등).
+- Routes: `src/mainRoutes.jsx`에 등록, Home은 meta.slug로 카드 자동 노출.
+
+## 7. 오픈 질문
+- 에디터: MDX 지원 WYSIWYG vs 스플릿 코드 편집(지원할 MDX 컴포넌트 범위)?
+- Auth: 이메일/비번만 우선? OAuth(Google/GitHub) 초기부터 도입?
+- 퍼블릭/어드민 분리 배포 여부?
+- 실습 상태 저장: 로컬/세션만? 사용자 계정 기반 저장/공유?
+
+## 8. Supabase 구현 메모
+- 테이블/인덱스:
+  - `posts`: slug, status, tags(GIN), published_at 인덱스.
+  - `labs`: key, linked_post_id 인덱스.
+  - `users`: role 컬럼(Supabase auth 사용자와 동기화).
+  - `assets`: 스토리지 URL 레퍼런스.
+- RLS 정책:
+  - 익명: `posts.status = 'published'`만 조회.
+  - 인증(editor/admin): 자신의 draft 읽기/쓰기, admin은 전체 발행 가능.
+  - Labs: 발행된 글과 연결된 랩은 공개 조회, 작성자는 CRUD.
+- 스토리지:
+  - 버킷 예시: `hero-public`, `assets-public`(공개), `draft-private`(제한).
+  - 업로드 후 URL을 메타에 저장.
+- Edge Functions 후보:
+  - `slug-check`: 발행 전 슬러그 유니크 검증.
+  - `publish-post`: 권한/상태 검증, published_at 세팅, 필요 시 웹훅.
+  - `image-proxy/resize`: 썸네일 최적화(선택).
+- 프런트 연동:
+  - 클라이언트는 anon 키 + RLS로 보호, 필요한 경우 서버(Edge)에서 서비스 롤 사용.
+  - 게시물/랩은 REST/RPC로 조회, MDX는 프런트에서 렌더.
+
+## 9. 다음 단계(단기)
+- UX 리팩 초안: Playground 프리뷰 우선 탭, 본문+우측 패널 시안 적용.
+- 메타 필드에 `type` 추가, 홈/목록 필터 연동.
+- Supabase 스키마/RLS 초안 작성(posts/labs/users/assets).
+- 퍼블릭 읽기용 fetch 훅을 Supabase에 연결(발행 상태만 노출).
+
+---
+
+# English Version — Product Direction & PRD (2025-11-27)
+
+Interactive web learning hub: read like a blog, practice in-place with live sandboxes. Current state, target UX, and a Supabase-backed server plan.
+
+## 0. Current State
+- Frontend: Vite + React 18, MDX, Tailwind CSS, Monaco Editor, esbuild-wasm.
+- Playground: HTML iframe sandbox; React sandbox (esbuild-wasm); code/preview toggles, reset/run.
+- Content: `src/pages/*.mdx` articles; `src/examples/<tech>/<example>/` labs with `meta.json`.
+- Routing: `src/mainRoutes.jsx`; Home auto-lists MDX via meta.
+
+## 1. Target Experience
+- Types: Post (text-first), Lab (exercise-first), Mixed (text + embedded labs).
+- Meta: `title`, `summary`, `slug`, `tags`, `tech`, `type`, `author`, `publishedAt`, `hero?`, `estimatedTime?`.
+- UX: Content-first; right lab panel. Desktop: content + right panel (Preview default, Code toggle). Mobile: content → preview → code stack.
+- Discovery: TOC, tags, search, filters (Post/Lab/Mixed), related posts/labs.
+- Authoring/Admin: dashboard (list/filter, draft/published), editor (MDX WYSIWYG or split), meta form, lab file editor + preview, autosave. Roles: admin/editor.
+
+## 2. Architecture (planned)
+- Frontend: React + MDX renderer; preview-first Playground tabs; API-friendly data loading.
+- Backend (Supabase):
+  - Auth: Supabase Auth (email+password, magic link, optional OAuth), role claims.
+  - DB: Supabase Postgres + RLS.
+  - Storage: Supabase Storage (hero/assets buckets, public/private).
+  - Edge Functions: slug check, publish flow, image utilities.
+  - Realtime: optional for draft collaboration signals.
+
+## 3. Data Model (draft)
+- `posts`: id, slug, title, summary, body_mdx, type(Post/Lab/Mixed), tech, tags[], hero?, author_id, status(draft/published), published_at, updated_at.
+- `labs`: id, key(tech/path), files json[{filename, content}], meta json{title, tech, description}, linked_post_id?, created_at, updated_at.
+- `users`: id, email, role(admin/editor) — auth handled by Supabase.
+- `assets`: id, url, meta, owner_id, created_at.
+
+## 4. UX Layout Plan
+- Post detail: header → body → right lab panel (Preview default, Code tab) → related content.
+- Playground: preview-first; code tab/toggle; Reset/Run; Auto-run; error surface; anchors/jumps.
+- Home/List: type filters (Post/Lab/Mixed), tag chips, search; keep current visual tone.
+
+## 5. Roadmap (incremental)
+1) UX refactor: preview-first Playground; content + right panel; type meta/filters.
+2) API skeleton (Supabase): Auth + posts CRUD + labs CRUD; swap frontend fetch hooks to Supabase.
+3) Admin UI: dashboard/editor/publish; lab file edit + preview; draft/published flow.
+4) Storage/Deploy: Supabase DB+Storage; frontend deploy (Vercel/Netlify/S3+CF); CDN assets.
+5) Search/Recommendation: tag/text search; related Post/Lab suggestions.
+
+## 6. Directory Conventions (current)
+- Pages: `src/pages/<slug>.mdx` with `export const meta`.
+- Labs: `src/examples/<tech>/<example-key>/` + `meta.json`; HTML (index/style/script), React (index.jsx + App.jsx etc.).
+- Routes: `src/mainRoutes.jsx`; Home auto-cards MDX via meta.slug.
+
+## 7. Open Questions
+- Editor: MDX-capable WYSIWYG vs split code editor (supported MDX components)?
+- Auth: email/password first, or add OAuth (Google/GitHub) from day 1?
+- Public vs admin deployment separation?
+- Lab state save: local/session only vs user-owned saves/shares?
+
+## 8. Supabase Implementation Notes
+- Tables/Indexes:
+  - `posts`: slug, status, tags (GIN), published_at indexes.
+  - `labs`: key, linked_post_id indexes.
+  - `users`: role column synced with Supabase auth.
+  - `assets`: storage URL reference.
+- RLS:
+  - Anonymous: read `posts` where status = 'published'.
+  - Auth (editor/admin): CRUD own drafts; admin can publish all.
+  - Labs: public read for published-linked labs; authors CRUD their labs.
+- Storage:
+  - Buckets: `hero-public`, `assets-public` (public), `draft-private` (restricted).
+  - Store URLs in meta after upload.
+- Edge Functions:
+  - `slug-check` for unique slug before publish.
+  - `publish-post` for role/status validation and published_at set; optional webhooks.
+  - `image-proxy/resize` optional for thumbs.
+- Frontend integration:
+  - Client uses anon key + RLS; service role only in server/edge paths if needed.
+  - Fetch posts/labs via REST/RPC; render MDX on the client.
+
+## 9. Next Steps (near term)
+- UX refactor draft: preview-first Playground tabs; content + right panel layout.
+- Add `type` to meta; hook filters on Home/List.
+- Draft Supabase schema/RLS (posts/labs/users/assets).
+- Hook public read fetchers to Supabase (published only).

@@ -1,0 +1,5 @@
+{
+  "title": "Browser rendering lab",
+  "tech": "html",
+  "description": "Experiment DOM parsing, CSSOM, JS blocking, reflow/repaint, and flex/grid switches in one page."
+}

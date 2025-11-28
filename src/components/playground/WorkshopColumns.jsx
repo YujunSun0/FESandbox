@@ -118,28 +118,28 @@ export const WorkshopColumns = ({ example, meta: metaProp, layout }) => {
   }
 
   const codePane = (
-    <div className="card-surface p-4 h-full flex flex-col">
-      <div className="flex items-center justify-between mb-3">
-        <div>
-          <div className="section-header mb-1">Code</div>
-          <div className="text-sm text-slate-600">{meta.title}</div>
+    <div className="bg-white/90 backdrop-blur border border-slate-200 rounded-2xl shadow-sm h-full flex flex-col">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Code</span>
+          <span className="text-sm text-slate-700">{meta.title}</span>
         </div>
         <div className="flex gap-2">
           <button
             onClick={reset}
-            className="px-3 py-1.5 text-sm rounded-lg border border-slate-200 text-slate-700 hover:border-emerald-200 hover:text-emerald-700"
+            className="px-3 py-1.5 text-sm rounded-lg border border-slate-200 text-slate-700 hover:border-emerald-200 hover:text-emerald-700 transition"
           >
-            Reset
+            초기화
           </button>
           <button
             onClick={() => triggerRun(files)}
-            className="px-3 py-1.5 text-sm rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+            className="px-3 py-1.5 text-sm rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition"
           >
-            Run
+            실행
           </button>
         </div>
       </div>
-      <div className="flex gap-2 border border-slate-200 rounded-lg px-2 py-1 mb-2 bg-slate-50 overflow-x-auto">
+      <div className="flex gap-2 border-b border-slate-200 px-4 py-2 overflow-x-auto bg-slate-50 rounded-t-2xl">
         {Object.keys(files).map((file) => (
           <button
             key={file}
@@ -152,7 +152,7 @@ export const WorkshopColumns = ({ example, meta: metaProp, layout }) => {
           </button>
         ))}
       </div>
-      <div className="flex-1 min-h-[400px] border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm">
+      <div className="flex-1 min-h-[520px] rounded-b-2xl overflow-hidden">
         {activeFile ? (
           <Editor
             theme="light"
@@ -174,14 +174,16 @@ export const WorkshopColumns = ({ example, meta: metaProp, layout }) => {
   )
 
   const previewPane = (
-    <div className="card-surface p-4 h-full flex flex-col">
-      <div className="flex items-center justify-between mb-3">
-        <div>
-          <div className="section-header mb-1">Preview</div>
-          <div className="text-sm text-slate-600">{meta.tech?.toUpperCase()}</div>
+    <div className="bg-white/90 backdrop-blur border border-slate-200 rounded-2xl shadow-sm h-full flex flex-col">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Preview</span>
+          <span className="px-2 py-1 text-[11px] rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+            {meta.tech?.toUpperCase()}
+          </span>
         </div>
         <div
-          className={`text-xs px-2 py-1 rounded self-start ${
+          className={`text-xs px-2 py-1 rounded-full ${
             status === 'running'
               ? 'bg-amber-100 text-amber-700'
               : status === 'error'
@@ -189,24 +191,24 @@ export const WorkshopColumns = ({ example, meta: metaProp, layout }) => {
                 : 'bg-emerald-100 text-emerald-700'
           }`}
         >
-          {status === 'running' ? 'Bundling...' : status === 'error' ? 'Error' : 'Ready'}
+          {status === 'running' ? '빌드 중' : status === 'error' ? '오류' : '준비'}
         </div>
       </div>
-      <div className="mt-3 flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col">
         {error ? (
-          <div className="p-4 text-sm text-rose-700 bg-rose-50 border border-rose-100 rounded-xl min-h-[400px]">
+          <div className="p-4 text-sm text-rose-700 bg-rose-50 border border-rose-100 rounded-b-2xl min-h-[520px]">
             {error}
           </div>
         ) : (
           <iframe
             title={`${example}-preview`}
-            className="w-full flex-1 min-h-[400px] border border-slate-200 rounded-xl bg-white shadow-sm"
+            className="w-full flex-1 min-h-[520px] border-0 bg-white rounded-b-2xl"
             sandbox="allow-scripts allow-same-origin"
             srcDoc={output}
           />
         )}
         {iframeError && (
-          <div className="mt-3 text-sm text-rose-700 bg-rose-50 border border-rose-100 rounded-lg px-3 py-2">
+          <div className="mt-3 text-sm text-rose-700 bg-rose-50 border border-rose-100 rounded-xl px-3 py-2">
             {iframeError}
           </div>
         )}
@@ -233,7 +235,7 @@ export const WorkshopColumns = ({ example, meta: metaProp, layout }) => {
                   : 'bg-white border-slate-200 text-slate-700'
               }`}
             >
-              Preview
+              프리뷰
             </button>
             <button
               onClick={() => setViewMode('code')}
@@ -243,16 +245,16 @@ export const WorkshopColumns = ({ example, meta: metaProp, layout }) => {
                   : 'bg-white border-slate-200 text-slate-600'
               }`}
             >
-              Code
+              코드
             </button>
           </div>
           {viewMode === 'preview' ? previewPane : codePane}
         </div>
       ) : (
-        <>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {codePane}
           {previewPane}
-        </>
+        </div>
       )}
     </>
   )
