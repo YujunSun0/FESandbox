@@ -2,6 +2,7 @@ import Home from './pages/Home'
 import BrowserRendering from './pages/browser-rendering.mdx'
 import HiddenDisplayVisibility from './pages/hidden-display-visibility.mdx'
 import UseStateTogglePage from './pages/UseStateTogglePage'
+import CompilerVsInterpreter from './pages/compiler-vs-interpreter.mdx'
 
 const routes = [
   {
@@ -27,6 +28,12 @@ const routes = [
     element: <UseStateTogglePage />,
     label: 'useState Toggle',
     tech: 'React',
+  },
+  {
+    path: '/compiler-vs-interpreter',
+    element: <CompilerVsInterpreter />,
+    label: '컴파일러 vs 인터프리터',
+    tech: 'General',
   },
 ]
 
