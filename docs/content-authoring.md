@@ -76,10 +76,22 @@
 - `src/pages/Home.jsx`는 `src/pages/*.mdx`의 `meta.slug`가 있는 항목을 자동 카드화합니다.
 - MDX가 아닌 TSX/JSX 페이지는 `Home.jsx`의 `extraEntries`에 수동으로 추가해야 목록에 보입니다.
 
-## 5) 작성 순서 체크리스트
+## 5) 작성 순서 체크리스트 (실습/플레이그라운드가 있는 문서)
 
 1. `src/examples/<tech>/<example-key>/`에 예제 파일과 `meta.json` 작성.
 2. `src/pages/<slug>.mdx` 생성, `meta` 선언 후 본문에서 `<Playground example="<tech>/<example-key>" />` 연결.
 3. `src/mainRoutes.jsx`에 라우트 추가(`path`는 `meta.slug`와 동일).
 4. (필요 시) `Home.jsx`의 `extraEntries`에 추가해 카드 노출 확인.
 5. 실행: `npm run dev` 후 페이지 이동 → 코드 수정/미리보기 동작 확인.
+
+## 6) 작성 순서 체크리스트 (글만 있는 문서 / Post 전용)
+
+실습 예제나 플레이그라운드 없이 **텍스트 중심 글(Post)** 만 작성할 때는 아래 순서를 따르면 됩니다.
+
+1. `src/pages/<slug>.mdx` 생성 후 상단에 `meta` 선언.
+   - `type: 'Post'` 로 지정.
+   - `tech`는 글이 속하는 주제(예: `'HTML'`, `'React'`, `'CSS'`, `'General'` 등)를 사용.
+2. 본문에는 마크다운/MDX로 글만 작성하고, `Playground` import·사용은 생략.
+3. `src/mainRoutes.jsx`에 라우트 추가(`path`는 `meta.slug`와 동일).
+4. (필요 시) `Home.jsx`의 `extraEntries`에 추가해 카드 노출 확인.
+5. 실행: `npm run dev` 후 페이지 이동 → 글 노출 및 내비게이션/카드 노출 확인.
